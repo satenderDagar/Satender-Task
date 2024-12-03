@@ -13,6 +13,7 @@ protocol CoinListViewModelProtocol {
     var searchQuery: String { get set }
     var reloadTableView: PassthroughSubject<Void, Never> { get }
     var errorSubject: PassthroughSubject<String, Never> { get }
+    var isLoading: PassthroughSubject<Bool, Never> { get }
     
     func updateFilters(filters: [Filter])
     func fetchCoins()
@@ -29,6 +30,7 @@ class CoinListViewModel: CoinListViewModelProtocol {
     
     var reloadTableView = PassthroughSubject<Void, Never>()
     var errorSubject = PassthroughSubject<String, Never>()
+    var isLoading = PassthroughSubject<Bool, Never>()
     
     lazy var searchQuery: String = "" {
         didSet {
@@ -37,23 +39,26 @@ class CoinListViewModel: CoinListViewModelProtocol {
         }
     }
         
-    init(networkService: NetworkServiceProtocol = NetworkService.shared) {
+    init(networkService: NetworkServiceProtocol = NetworkService(urlSession: URLSession.shared)) {
         self.networkService = networkService
     }
     
     func fetchCoins() {
+        isLoading.send(true)
         networkService.fetchData(from: Endpoint.coin)
              .receive(on: DispatchQueue.main)
              .sink(receiveCompletion: { [weak self] completion in
                  switch completion {
                  case .failure(let error):
                      self?.errorSubject.send(error.localizedDescription)
+                     self?.isLoading.send(false)
                  case .finished:
                      break
                  }
              }, receiveValue: { [weak self] (coinsReceived: [CoinData]) in
                  self?.coins = coinsReceived
                  self?.filteredCoins = coinsReceived
+                 self?.isLoading.send(false)
                  self?.reloadTableView.send(())
              })
              .store(in: &cancellables)
@@ -71,7 +76,7 @@ class CoinListViewModel: CoinListViewModelProtocol {
                 filteredCoins = filteredCoins.filter { !$0.isActive }
             case .cryptoTypeToken:
                 filteredCoins = filteredCoins.filter { $0.type == .token }
-            case .crptoTypeCoin:
+            case .cryptoTypeCoin:
                 filteredCoins = filteredCoins.filter { $0.type == .coin }
             case .isNew:
                 filteredCoins = filteredCoins.filter { $0.isNew }

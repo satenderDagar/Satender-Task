@@ -23,7 +23,7 @@ enum Filter: String, CaseIterable {
     case active = "Active Coins"
     case inactive = "Inactive Coins"
     case cryptoTypeToken = "Only Tokens"
-    case crptoTypeCoin = "Only Coins"
+    case cryptoTypeCoin = "Only Coins"
     case isNew = "New Coins"
     
     static var allFilterNames: [String] {

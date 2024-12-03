@@ -20,6 +20,7 @@ class CoinListViewController: UIViewController, CoinListViewProtocol {
     private var tableView: UITableView!
     private var searchController: UISearchController!
     private var filterCollectionView: FilterCollectionViewController!
+    private var loadingIndicator: UIActivityIndicatorView!
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -59,8 +60,16 @@ class CoinListViewController: UIViewController, CoinListViewProtocol {
         view.addSubview(filterCollectionView.view)
         filterCollectionView.didMove(toParent: self)
         
-        // 4. Set up constraints
+        // 4. Initialize loading indicator
+        loadingIndicator = UIActivityIndicatorView(style: .large)
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loadingIndicator)
+        
+        // 5. Set up constraints
         NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
             // TableView Constraints
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -86,7 +95,18 @@ class CoinListViewController: UIViewController, CoinListViewProtocol {
         coinListViewModel?.errorSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
-                self?.showError(message: error)
+                self?.showError(message: error.debugDescription)
+            }
+            .store(in: &cancellables)
+        
+        coinListViewModel?.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoadingIndicator()
+                } else {
+                    self?.hideLoadingIndicator()
+                }
             }
             .store(in: &cancellables)
     }
@@ -101,15 +121,23 @@ class CoinListViewController: UIViewController, CoinListViewProtocol {
     }
         
     func showLoadingIndicator() {
-        // Implement loading indicator logic
+        loadingIndicator.startAnimating()
     }
     
     func hideLoadingIndicator() {
-        // Hide loading indicator
+        loadingIndicator.stopAnimating()
     }
     
     func showError(message: String) {
-        // Show error alert
+        let alertController = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 

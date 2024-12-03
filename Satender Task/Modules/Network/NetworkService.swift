@@ -14,15 +14,19 @@ protocol NetworkServiceProtocol {
 
 final class NetworkService: NetworkServiceProtocol {
     
-    static let shared = NetworkService()
-    private init() {}
+    private let urlSession: URLSession
     
-    func fetchData<T>(from endPoint: Endpoint) -> AnyPublisher<T, any Error> where T : Decodable {
+    // Initializer that accepts a URLSession dependency
+    init(urlSession: URLSession = URLSession.shared) {
+        self.urlSession = urlSession
+    }
+    
+    func fetchData<T>(from endPoint: Endpoint) -> AnyPublisher<T, Error> where T : Decodable {
         guard let urlString = endPoint.completeUrlString, let url = URL(string: urlString) else {
             return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
         
-        return URLSession.shared.dataTaskPublisher(for: url)
+        return urlSession.dataTaskPublisher(for: url)
             .tryMap { output in
                 // Extract data and response from the tuple
                 let data = output.data
@@ -30,14 +34,13 @@ final class NetworkService: NetworkServiceProtocol {
                 
                 // Check the status code
                 guard response?.statusCode == 200 else {
-                    throw NetworkError.invalidURL
+                    throw NetworkError.serviceNotFound
                 }
                 
                 return data
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .mapError { error in
-
                 if let apiError = error as? NetworkError {
                     return apiError
                 } else if let _ = error as? DecodingError {
@@ -53,5 +56,6 @@ final class NetworkService: NetworkServiceProtocol {
 enum NetworkError: Error {
     case invalidURL
     case decodingError
+    case serviceNotFound
     case unknown
 }

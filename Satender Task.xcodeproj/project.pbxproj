@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0919B6FF2CFF8C5000D21A0F /* Satender Task.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Satender Task.xctestplan"; path = "Satender TaskTests/Satender Task.xctestplan"; sourceTree = "<group>"; };
 		0959EB9F2CF9E53500950BFF /* Satender Task.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Satender Task.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0959EBB82CF9E53600950BFF /* Satender TaskTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Satender TaskTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0959EBC22CF9E53600950BFF /* Satender TaskUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Satender TaskUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +89,7 @@
 		0959EB962CF9E53500950BFF = {
 			isa = PBXGroup;
 			children = (
+				0919B6FF2CFF8C5000D21A0F /* Satender Task.xctestplan */,
 				0959EBA12CF9E53500950BFF /* Satender Task */,
 				0959EBBB2CF9E53600950BFF /* Satender TaskTests */,
 				0959EBC52CF9E53600950BFF /* Satender TaskUITests */,
@@ -191,7 +193,6 @@
 					};
 					0959EBB72CF9E53600950BFF = {
 						CreatedOnToolsVersion = 16.0;
-						TestTargetID = 0959EB9E2CF9E53500950BFF;
 					};
 					0959EBC12CF9E53600950BFF = {
 						CreatedOnToolsVersion = 16.0;
@@ -466,7 +467,7 @@
 		0959EBD12CF9E53600950BFF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Satender Task.app/Satender Task";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -477,14 +478,14 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Satender Task.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Satender Task";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
 		};
 		0959EBD22CF9E53600950BFF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Satender Task.app/Satender Task";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -495,7 +496,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Satender Task.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Satender Task";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
 		};

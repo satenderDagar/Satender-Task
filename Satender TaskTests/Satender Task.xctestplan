@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "9450EAF0-28DE-4841-A05C-B072C2482131",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Satender Task.xcodeproj",
+      "identifier" : "0959EB9E2CF9E53500950BFF",
+      "name" : "Satender Task"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:Satender Task.xcodeproj",
+        "identifier" : "0959EBB72CF9E53600950BFF",
+        "name" : "Satender TaskTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:Satender Task.xcodeproj",
+        "identifier" : "0959EBC12CF9E53600950BFF",
+        "name" : "Satender TaskUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
