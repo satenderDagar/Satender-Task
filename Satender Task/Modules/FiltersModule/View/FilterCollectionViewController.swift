@@ -14,7 +14,7 @@ protocol FilterUpdaterDelegate: AnyObject {
 
 class FilterCollectionViewController: UICollectionViewController {
     
-    var viewModel: FilterViewModel? = FilterViewModel()
+    var viewModel = FilterViewModel()
     var cancellable = Set<AnyCancellable>()
     weak var filterUpdaterDelegate: FilterUpdaterDelegate?
     
@@ -38,13 +38,13 @@ class FilterCollectionViewController: UICollectionViewController {
     }
     
     private func observeFilters() {
-        viewModel?.$filters
+        viewModel.$filters
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.collectionView.reloadData()
             }.store(in: &cancellable)
         
-        viewModel?.selectedFilters
+        viewModel.selectedFilters
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedfilters in
                 self?.filterUpdaterDelegate?.didChangeSelectedFilters(filters: selectedfilters)
@@ -59,28 +59,22 @@ extension FilterCollectionViewController{
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel?.filters.count ?? 0
+        return viewModel.filters.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionViewCell.reuseIdentifier, for: indexPath) as? FilterCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configure(with: viewModel?.filters[indexPath.row])
+        cell.configure(with: viewModel.filters[indexPath.row])
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let viewModel = viewModel else {
-            return
-        }
         viewModel.toggleSelection(for: viewModel.filters[indexPath.row])
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let viewModel = viewModel else {
-            return
-        }
         viewModel.toggleSelection(for: viewModel.filters[indexPath.row])
     }
 }

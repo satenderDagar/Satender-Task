@@ -41,11 +41,14 @@ final class NetworkService: NetworkServiceProtocol {
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .mapError { error in
-                if let apiError = error as? NetworkError {
-                    return apiError
-                } else if let _ = error as? DecodingError {
+                switch error {
+                    case let error as URLError:
+                    return NetworkError.invalidURL
+                    case let error as DecodingError:
                     return NetworkError.decodingError
-                } else {
+                    case let error as NetworkError:
+                    return error
+                    default :
                     return NetworkError.unknown
                 }
             }

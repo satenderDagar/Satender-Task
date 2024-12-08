@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AppConfigurations {
+struct AppConfigurations {
     static var apiBaseURL = Bundle.main.object(forInfoDictionaryKey: NetworkApi.baseURL) as? String
 }
 
